@@ -9,7 +9,7 @@ class UnitSelect(Enum):
 
 
 class WonderlandWeatherSettings(BaseModel):
-    open_weather_api: str
+    open_weather_api: str = ""
     temperature_unit: UnitSelect = UnitSelect.IMPERIAL
 
 

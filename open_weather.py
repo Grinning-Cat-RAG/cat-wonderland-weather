@@ -6,7 +6,7 @@ from cat.utils import singleton
 
 @singleton
 class WeatherAPI:
-    def __init__(self, api_key: str, city: str, units: str):
+    def __init__(self, api_key: str):
         self._base_url = "https://api.openweathermap.org/data/2.5/forecast"
         self.api_key = api_key
 
