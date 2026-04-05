@@ -4,7 +4,7 @@ from .open_weather import WeatherAPI
 
 
 @tool(examples=["weather today", "weather tomorrow", "weather Sunday"])
-def get_weather(city: str, cat):
+async def get_weather(city: str, cat):
     """
     Replies to "weather today", "what the weather will be like on Tuesday", "What will the weather be like this weekend?"
     and similar questions. The city can be specified as well, e.g. "what the weather will be like in New York on Tuesday".
@@ -13,7 +13,7 @@ def get_weather(city: str, cat):
     if not city:
         return None
 
-    settings = cat.mad_hatter.get_plugin().load_settings()
+    settings = await cat.mad_hatter.get_plugin().load_settings()
     
     weather_api = WeatherAPI(settings["open_weather_api"])
     try:
