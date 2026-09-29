@@ -1,20 +1,35 @@
-import requests
 import datetime
 
-from cat.utils import singleton
+import httpx
+
+#: seconds to wait for OpenWeatherMap: a slow service never holds a request (or the instance) for long
+TIMEOUT_SECONDS = 10.0
 
 
-@singleton
+def _client() -> httpx.AsyncClient:
+    return httpx.AsyncClient(timeout=TIMEOUT_SECONDS)
+
+
 class WeatherAPI:
+    """A client of OpenWeatherMap with the API key of one agent.
+
+    The Cat is multi-tenant: a client is created per request with the settings of the agent of the request, and it is
+    never shared (no singleton, no module state), so an agent never uses the API key of another one.
+    """
+
     def __init__(self, api_key: str):
         self._base_url = "https://api.openweathermap.org/data/2.5/forecast"
         self.api_key = api_key
 
-    def weather(self, city: str, units: str):
+    async def weather(self, city: str, units: str):
+        """The daily forecast of ``city``, asked without blocking the event loop (the other requests served by the
+        instance go on meanwhile). The city is sent as a parameter of the query, encoded by the HTTP client: a name
+        with ``&``, ``=`` or ``#`` never changes the unit or the API key of the request."""
         temperature_symbol = "°C" if units == "metric" else "°F"
-        url = f"{self._base_url}?q={city}&units={units}&appid={self.api_key}"
+        params = {"q": city, "units": units, "appid": self.api_key}
 
-        response = requests.get(url)
+        async with _client() as client:
+            response = await client.get(self._base_url, params=params)
         response.raise_for_status()
 
         data = response.json()

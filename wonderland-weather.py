@@ -13,11 +13,11 @@ async def get_weather(city: str, cat):
     if not city:
         return None
 
+    # the settings of the agent of this request: the client is created per request, with its API key
     settings = await cat.mad_hatter.get_plugin().load_settings()
-    
     weather_api = WeatherAPI(settings["open_weather_api"])
     try:
-        weather_data = weather_api.weather(city, settings["temperature_unit"])
+        weather_data = await weather_api.weather(city, settings["temperature_unit"])
         return weather_data
     except Exception as e:
         log.warning(f"Error getting weather data: {e}")
