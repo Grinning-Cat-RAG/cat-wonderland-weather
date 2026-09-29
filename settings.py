@@ -2,7 +2,7 @@ from typing import Any, Dict
 from pydantic import BaseModel
 from enum import Enum
 
-from cat import plugin
+from cat import log, plugin
 from cat.db.cruds import plugins as crud_plugins
 from cat.services.string_crypto import StringCrypto
 
