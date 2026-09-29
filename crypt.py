@@ -1,6 +1,6 @@
 from typing import Any, Dict, List, Protocol, Tuple
 
-SECRET_SETTINGS = ("open_weather_api")
+SECRET_SETTINGS = ("open_weather_api",)
 
 
 class Crypto(Protocol):
